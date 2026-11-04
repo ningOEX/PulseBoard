@@ -20,20 +20,20 @@ async function request<T>(url: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
-  health: () => request<{ ok: boolean; mode: StoreMode; datasetCount?: number; dashboardCount?: number }>('/api/health'),
-  listDashboards: () => request<DashboardSummary[]>('/api/dashboards'),
+  health: () => request<{ ok: boolean; mode: StoreMode; datasetCount?: number; dashboardCount?: number }>('/board/api/health'),
+  listDashboards: () => request<DashboardSummary[]>('/board/api/dashboards'),
   createDashboard: (name: string) =>
-    request<{ id: string; name: string }>('/api/dashboards', {
+    request<{ id: string; name: string }>('/board/api/dashboards', {
       method: 'POST',
       body: JSON.stringify({ name }),
     }),
   deleteDashboard: (id: string) => request<{ ok: true }>(`/api/dashboards/${id}`, { method: 'DELETE' }),
 
   // 数据集
-  listDatasets: () => request<Dataset[]>('/api/datasets'),
+  listDatasets: () => request<Dataset[]>('/board/api/datasets'),
   getDataset: (id: string) => request<Dataset>(`/api/datasets/${id}`),
   createDataset: (body: Omit<Dataset, 'id'>) =>
-    request<Dataset>('/api/datasets', {
+    request<Dataset>('/board/api/datasets', {
       method: 'POST',
       body: JSON.stringify(body),
     }),
@@ -54,12 +54,12 @@ export const api = {
       body: JSON.stringify({ rows }),
     }),
   importCsv: (name: string, csv: string) =>
-    request<Dataset>('/api/datasets/csv', {
+    request<Dataset>('/board/api/datasets/csv', {
       method: 'POST',
       body: JSON.stringify({ name, csv }),
     }),
   importExcel: (name: string, base64: string) =>
-    request<Dataset>('/api/datasets/excel', {
+    request<Dataset>('/board/api/datasets/excel', {
       method: 'POST',
       body: JSON.stringify({ name, base64 }),
     }),

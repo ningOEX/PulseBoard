@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+  base: '/board/',
   plugins: [vue()],
   resolve: {
     alias: {
@@ -12,14 +13,16 @@ export default defineConfig({
   server: {
     port: 5180,
     proxy: {
-      '/api': {
+      '/board/api': {
         target: 'http://localhost:4000',
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/board/, ''),
       },
-      '/socket.io': {
+      '/board/socket.io': {
         target: 'http://localhost:4000',
         changeOrigin: true,
         ws: true,
+        rewrite: (path) => path.replace(/^\/board/, ''),
       },
     },
   },

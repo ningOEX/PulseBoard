@@ -153,7 +153,7 @@ export function useDashboard(identity: Ref<UserInfo>) {
 
   function bindSocket(): void {
     if (socket) return;
-    socket = io({ path: '/socket.io' });
+    socket = io({ path: '/board/socket.io' });
 
     socket.on('connect', () => {
       connected.value = true;

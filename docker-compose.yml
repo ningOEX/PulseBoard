@@ -18,9 +18,9 @@ services:
       context: ./web
     container_name: pulseboard-web
     restart: unless-stopped
-    # 宿主机端口:容器端口，如 8080 被占用可修改左侧端口
+    # 宿主机端口:容器端口，80/8081 已被占用，使用 8082 供外层 Nginx 反代
     ports:
-      - "8080:80"
+      - "127.0.0.1:8082:80"
     depends_on:
       - server
     networks:
