@@ -66,13 +66,13 @@ Run-Step "上传 docker-compose.yml" {
 
 # ---------- 4. 远程启动 ----------
 Run-Step "远程构建并启动容器" {
-    $cmd = "cd $RemotePath; docker compose up -d --build"
+    $cmd = 'cd ' + $RemotePath + '; docker compose up -d --build'
     ssh $sshTarget $cmd
 }
 
 # ---------- 5. 验证 ----------
 Run-Step "检查容器状态" {
-    $cmd = "cd $RemotePath; docker compose ps"
+    $cmd = 'cd ' + $RemotePath + '; docker compose ps'
     ssh $sshTarget $cmd
 }
 
