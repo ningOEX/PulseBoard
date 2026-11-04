@@ -1,43 +1,43 @@
 services:
   mongo:
     image: mongo:6
-    container_name: pulseboard-mongo
+    container_name: panel-mongo
     restart: unless-stopped
+    # 2G 内存服务器，限制 mongo 缓存大小避免 OOM
+    command: mongod --wiredTigerCacheSizeGB 0.25
     volumes:
       - mongo-data:/data/db
     networks:
-      - pulseboard-net
+      - panel-net
 
   server:
     build:
       context: ./server
-    container_name: pulseboard-server
+    container_name: panel-server
     restart: unless-stopped
     environment:
       NODE_ENV: production
-      # 连接同网络内的 mongo 容器，容器名即主机名
       MONGODB_URI: mongodb://mongo:27017/panel_chat
     depends_on:
       - mongo
     networks:
-      - pulseboard-net
+      - panel-net
 
   web:
     build:
       context: ./web
-    container_name: pulseboard-web
+    container_name: panel-web
     restart: unless-stopped
-    # 仅本机监听，供外层 Nginx 反代
     ports:
-      - "127.0.0.1:8082:80"
+      - "8082:80"
     depends_on:
       - server
     networks:
-      - pulseboard-net
+      - panel-net
 
 volumes:
   mongo-data:
 
 networks:
-  pulseboard-net:
+  panel-net:
     driver: bridge

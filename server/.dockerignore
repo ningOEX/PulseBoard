@@ -1,5 +1,6 @@
 node_modules
-*.log
-.env
 src
 tsconfig.json
+.env
+.env.*
+*.log

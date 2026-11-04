@@ -265,22 +265,53 @@ const totalFields = computed(() =>
 <template>
   <aside class="flex w-72 shrink-0 flex-col overflow-hidden border-r border-soft bg-sidebar">
     <!-- 面板 Tab 切换 -->
-    <div class="flex border-b border-soft p-2">
+    <div class="flex shrink-0 items-center gap-1 border-b border-soft bg-sidebar p-2">
       <button
         type="button"
-        class="flex-1 rounded-lg px-2 py-1.5 text-[11px] font-medium transition"
-        :class="tab === 'canvas' ? 'bg-card-2 text-app' : 'text-soft hover:text-app'"
+        class="group relative flex flex-1 items-center justify-center gap-1.5 overflow-hidden rounded-xl px-2 py-2 text-[12px] font-medium transition-all duration-200"
+        :class="tab === 'canvas' ? 'text-app' : 'text-soft hover:text-app'"
         @click="tab = 'canvas'"
       >
-        看板 & 图表
+        <span
+          v-if="tab === 'canvas'"
+          class="absolute inset-0 rounded-xl bg-gradient-to-r from-violet-500/25 to-cyan-500/20 ring-1 ring-violet-400/30"
+        ></span>
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          class="relative h-3.5 w-3.5"
+        >
+          <rect x="3" y="3" width="7" height="7" rx="1.5" />
+          <rect x="14" y="3" width="7" height="4" rx="1.5" />
+          <rect x="14" y="11" width="7" height="10" rx="1.5" />
+          <rect x="3" y="14" width="7" height="7" rx="1.5" />
+        </svg>
+        <span class="relative">看板图表</span>
       </button>
       <button
         type="button"
-        class="flex-1 rounded-lg px-2 py-1.5 text-[11px] font-medium transition"
-        :class="tab === 'data' ? 'bg-card-2 text-app' : 'text-soft hover:text-app'"
+        class="group relative flex flex-1 items-center justify-center gap-1.5 overflow-hidden rounded-xl px-2 py-2 text-[12px] font-medium transition-all duration-200"
+        :class="tab === 'data' ? 'text-app' : 'text-soft hover:text-app'"
         @click="tab = 'data'"
       >
-        数据集管理
+        <span
+          v-if="tab === 'data'"
+          class="absolute inset-0 rounded-xl bg-gradient-to-r from-violet-500/25 to-cyan-500/20 ring-1 ring-violet-400/30"
+        ></span>
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          class="relative h-3.5 w-3.5"
+        >
+          <ellipse cx="12" cy="5" rx="8" ry="3" />
+          <path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5" />
+          <path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
+        </svg>
+        <span class="relative">数据集</span>
       </button>
     </div>
 
@@ -288,7 +319,10 @@ const totalFields = computed(() =>
     <div v-if="tab === 'canvas'" class="flex min-h-0 flex-1 flex-col overflow-hidden">
       <section class="shrink-0 border-b border-soft p-4">
         <div class="mb-2 flex items-center justify-between">
-          <h2 class="text-[11px] font-semibold uppercase tracking-widest text-subtle">数据看板</h2>
+          <h2 class="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-subtle">
+            <span class="h-3 w-1 rounded-full bg-gradient-to-b from-violet-400 to-cyan-400"></span>
+            数据看板
+          </h2>
           <button
             type="button"
             class="text-[11px] text-violet-300 transition hover:text-violet-200"
@@ -341,7 +375,10 @@ const totalFields = computed(() =>
       </section>
 
       <section class="shrink-0 border-b border-soft p-4">
-        <h2 class="mb-2 text-[11px] font-semibold uppercase tracking-widest text-subtle">图表组件</h2>
+        <h2 class="mb-2 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-subtle">
+          <span class="h-3 w-1 rounded-full bg-gradient-to-b from-violet-400 to-cyan-400"></span>
+          图表组件
+        </h2>
         <div class="grid grid-cols-2 gap-2">
           <button
             v-for="item in chartTypes"
@@ -368,7 +405,10 @@ const totalFields = computed(() =>
 
       <section class="shrink-0 max-h-[12.5rem] overflow-y-auto border-b border-soft p-4">
         <h2 class="mb-2 flex items-center justify-between text-[11px] font-semibold uppercase tracking-widest text-subtle">
-          <span>已接入字段</span>
+          <span class="flex items-center gap-1.5">
+            <span class="h-3 w-1 rounded-full bg-gradient-to-b from-violet-400 to-cyan-400"></span>
+            已接入字段
+          </span>
           <span class="text-[10px] font-normal normal-case text-subtle">{{ totalFields }} 个字段</span>
         </h2>
         <div v-for="dataset in props.datasets" :key="dataset.id" class="mb-3 last:mb-0">
@@ -388,7 +428,10 @@ const totalFields = computed(() =>
 
       <section class="flex min-h-0 flex-1 flex-col p-4">
         <h2 class="mb-2 flex items-center justify-between text-[11px] font-semibold uppercase tracking-widest text-subtle">
-          <span>协作动态</span>
+          <span class="flex items-center gap-1.5">
+            <span class="h-3 w-1 rounded-full bg-gradient-to-b from-violet-400 to-cyan-400"></span>
+            协作动态
+          </span>
           <span
             class="h-1.5 w-1.5 rounded-full"
             :class="props.connected ? 'bg-emerald-400' : 'bg-rose-400'"
@@ -425,21 +468,24 @@ const totalFields = computed(() =>
     <!-- ===== 数据集管理面板 ===== -->
     <div v-else class="flex min-h-0 flex-1 flex-col overflow-hidden">
       <section class="border-b border-soft p-4">
-        <div class="mb-2 flex items-center justify-between">
-          <h2 class="text-[11px] font-semibold uppercase tracking-widest text-subtle">数据导入</h2>
-          <div class="flex rounded-md border border-app bg-card-3 p-0.5 text-[10px]">
+        <div class="mb-3 flex items-center justify-between">
+          <h2 class="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-subtle">
+            <span class="h-3 w-1 rounded-full bg-gradient-to-b from-violet-400 to-cyan-400"></span>
+            数据导入
+          </h2>
+          <div class="flex rounded-lg border border-app bg-card-3 p-0.5 text-[10px]">
             <button
               type="button"
-              class="rounded px-2 py-0.5 transition"
-              :class="importMode === 'csv' ? 'bg-violet-500/20 text-violet-200' : 'text-soft hover:text-app'"
+              class="rounded-md px-2.5 py-1 transition"
+              :class="importMode === 'csv' ? 'bg-gradient-to-r from-violet-500/30 to-cyan-500/20 text-app ring-1 ring-violet-400/30' : 'text-soft hover:text-app'"
               @click="importMode = 'csv'"
             >
               CSV 文本
             </button>
             <button
               type="button"
-              class="rounded px-2 py-0.5 transition"
-              :class="importMode === 'excel' ? 'bg-violet-500/20 text-violet-200' : 'text-soft hover:text-app'"
+              class="rounded-md px-2.5 py-1 transition"
+              :class="importMode === 'excel' ? 'bg-gradient-to-r from-violet-500/30 to-cyan-500/20 text-app ring-1 ring-violet-400/30' : 'text-soft hover:text-app'"
               @click="importMode = 'excel'"
             >
               Excel 文件
@@ -451,17 +497,17 @@ const totalFields = computed(() =>
         <template v-if="importMode === 'csv'">
           <input
             v-model="csvName"
-            class="field mb-2 py-1.5 text-[12px]"
+            class="field mb-2 py-2 text-[12px]"
             placeholder="数据集名称，例如 新业务报表"
             maxlength="40"
           />
           <textarea
             v-model="csvContent"
-            class="field min-h-[100px] resize-y py-2 font-mono text-[11px]"
+            class="field min-h-[100px] resize-y rounded-xl py-2.5 font-mono text-[11px] leading-relaxed"
             placeholder="month,region,revenue,orders&#10;1月,华东,120000,320&#10;1月,华南,98000,260"
           ></textarea>
-          <div class="mt-2 flex items-center gap-2">
-            <button type="button" class="btn-primary px-3 py-1.5 text-[12px]" @click="importCsv">
+          <div class="mt-2.5 flex items-center gap-2">
+            <button type="button" class="btn-primary px-4 py-2 text-[12px]" @click="importCsv">
               导入数据集
             </button>
             <span v-if="dataAction" class="truncate text-[11px] text-rose-300">{{ dataAction }}</span>
@@ -472,13 +518,19 @@ const totalFields = computed(() =>
         <template v-else>
           <input
             v-model="excelName"
-            class="field mb-2 py-1.5 text-[12px]"
+            class="field mb-2 py-2 text-[12px]"
             placeholder="数据集名称（留空则用文件名）"
             maxlength="40"
           />
-          <label class="flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-app bg-card-3 px-3 py-4 text-center transition hover:border-violet-400/40 hover:bg-violet-500/5">
-            <span class="text-violet-300">📊</span>
-            <span class="truncate text-[12px] text-app">
+          <label class="flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-app bg-card-3 px-3 py-5 text-center transition hover:border-violet-400/50 hover:bg-violet-500/5">
+            <span class="flex h-9 w-9 items-center justify-center rounded-full bg-violet-500/15 text-violet-300">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke-linecap="round" stroke-linejoin="round" />
+                <polyline points="17 8 12 3 7 8" stroke-linecap="round" stroke-linejoin="round" />
+                <line x1="12" y1="3" x2="12" y2="15" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+            <span class="truncate text-[12px] font-medium text-app">
               {{ excelFileName || '点击选择 .xlsx / .xls / .csv 文件' }}
             </span>
             <input
@@ -489,10 +541,10 @@ const totalFields = computed(() =>
               @change="onExcelFileChange"
             />
           </label>
-          <div class="mt-2 flex items-center gap-2">
+          <div class="mt-2.5 flex items-center gap-2">
             <button
               type="button"
-              class="btn-primary px-3 py-1.5 text-[12px]"
+              class="btn-primary px-4 py-2 text-[12px]"
               :disabled="importing"
               @click="importExcel"
             >
@@ -502,36 +554,44 @@ const totalFields = computed(() =>
           </div>
         </template>
 
-        <p class="mt-2 text-[10px] leading-relaxed text-subtle">
+        <p class="mt-2.5 rounded-lg bg-card-3 px-2.5 py-1.5 text-[10px] leading-relaxed text-subtle">
           字段类型自动推断：全数字字段 → 指标，含文本 → 维度。Excel 第一行作为表头。
         </p>
       </section>
 
       <section class="flex min-h-0 flex-1 flex-col p-4">
-        <h2 class="mb-2 flex items-center justify-between text-[11px] font-semibold uppercase tracking-widest text-subtle">
-          <span>数据集列表</span>
+        <h2 class="mb-3 flex items-center justify-between">
+          <span class="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-subtle">
+            <span class="h-3 w-1 rounded-full bg-gradient-to-b from-violet-400 to-cyan-400"></span>
+            数据集列表
+          </span>
           <button
             type="button"
-            class="text-[11px] text-violet-300 transition hover:text-violet-200"
+            class="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] text-violet-300 transition hover:bg-violet-500/10 hover:text-violet-200"
             @click="refreshDatasets"
           >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-3 w-3">
+              <path d="M23 4v6h-6" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M1 20v-6h6" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
             刷新
           </button>
         </h2>
-        <div class="min-h-0 flex-1 max-h-[32rem] space-y-2 overflow-y-auto pr-0.5">
+        <div class="min-h-0 flex-1 max-h-[32rem] space-y-2.5 overflow-y-auto pr-0.5">
           <div
             v-for="dataset in props.datasets"
             :key="dataset.id"
-            class="rounded-xl border border-soft bg-card-3 p-3"
+            class="group rounded-xl border border-soft bg-card p-3 transition hover:border-violet-400/30 hover:shadow-lg"
           >
             <div class="flex items-start justify-between gap-2">
               <div class="min-w-0 flex-1">
-                <div class="flex items-center gap-2">
-                  <p class="truncate text-[12px] font-medium text-app">{{ dataset.name }}</p>
-                  <span class="shrink-0 rounded-full bg-violet-500/10 px-1.5 py-0.5 text-[9px] text-violet-300">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <p class="truncate text-[12px] font-semibold text-app">{{ dataset.name }}</p>
+                  <span class="shrink-0 rounded-full bg-violet-500/15 px-2 py-0.5 text-[9px] font-medium text-violet-300">
                     {{ dataset.rows.length }} 行
                   </span>
-                  <span class="shrink-0 rounded-full bg-cyan-500/10 px-1.5 py-0.5 text-[9px] text-cyan-300">
+                  <span class="shrink-0 rounded-full bg-cyan-500/15 px-2 py-0.5 text-[9px] font-medium text-cyan-300">
                     {{ dataset.fields.length }} 字段
                   </span>
                 </div>
@@ -539,35 +599,35 @@ const totalFields = computed(() =>
                   {{ dataset.description }}
                 </p>
               </div>
-              <div class="flex shrink-0 items-center gap-1">
+              <div class="flex shrink-0 items-center gap-1 opacity-70 transition group-hover:opacity-100">
                 <button
                   type="button"
-                  class="rounded-md border border-app bg-card-2 px-2 py-1 text-[10px] text-app transition hover:bg-hover"
+                  class="rounded-md border border-app bg-card-2 px-2.5 py-1 text-[10px] text-soft transition hover:border-violet-400/40 hover:bg-violet-500/10 hover:text-app"
                   @click="openEditRows(dataset)"
                 >
                   编辑行
                 </button>
                 <button
                   type="button"
-                  class="rounded-md border border-rose-500/20 bg-rose-500/10 px-2 py-1 text-[10px] text-rose-300 transition hover:bg-rose-500/20"
+                  class="rounded-md border border-rose-500/20 bg-rose-500/10 px-2.5 py-1 text-[10px] text-rose-300 transition hover:bg-rose-500/20"
                   @click="deleteDataset(dataset.id)"
                 >
                   删除
                 </button>
               </div>
             </div>
-            <div class="mt-1.5 flex flex-wrap gap-1">
+            <div class="mt-2 flex flex-wrap gap-1">
               <span
                 v-for="field in dataset.fields"
                 :key="field.key"
-                class="rounded px-1.5 py-0.5 text-[10px]"
+                class="rounded-full px-2 py-0.5 text-[10px] font-medium"
                 :class="field.type === 'dimension' ? 'bg-cyan-500/10 text-cyan-300' : 'bg-amber-500/10 text-amber-300'"
               >
                 {{ field.label }}
               </span>
             </div>
           </div>
-          <p v-if="!props.datasets.length" class="rounded-lg border border-dashed border-app px-3 py-4 text-center text-[11px] text-subtle">
+          <p v-if="!props.datasets.length" class="rounded-xl border border-dashed border-app bg-card-3 px-3 py-8 text-center text-[11px] text-subtle">
             暂无数据集
           </p>
         </div>

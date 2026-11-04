@@ -73,7 +73,10 @@ async function boot(): Promise<void> {
   }
 }
 
-onMounted(boot);
+onMounted(() => {
+  // 已有身份（老用户）才在挂载时连接；新用户等输入昵称后由 handleJoin 触发 boot
+  if (hasIdentity.value) boot();
+});
 
 async function handleJoin(payload: { name: string; color: string }): Promise<void> {
   saveIdentity(payload.name, payload.color);

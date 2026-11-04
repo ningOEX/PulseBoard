@@ -76,6 +76,8 @@ export async function initStore(): Promise<Store> {
     { $setOnInsert: { ...createSeedDashboard() } },
     { upsert: true },
   );
+  // 清理旧版本遗留的第二个种子看板，只保留团队销售看板
+  await DashboardModel.deleteOne({ _id: 'traffic-growth' });
 
   const store: Store = {
     mode: 'mongo',

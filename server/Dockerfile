@@ -1,4 +1,4 @@
-# 运行阶段：仅运行本地已编译的产物（不在容器内编译）
+# 仅运行本地已编译的 dist 产物，不在容器内编译
 FROM node:20-alpine
 WORKDIR /app
 COPY package*.json ./
