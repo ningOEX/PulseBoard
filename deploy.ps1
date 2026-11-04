@@ -65,17 +65,17 @@ Run-Step "上传 docker-compose.yml" {
 
 # ---------- 4. 远程启动 ----------
 Run-Step "远程构建并启动容器" {
-    ssh $sshTarget "cd $RemotePath && docker compose up -d --build"
+    ssh $sshTarget "cd $RemotePath; docker compose up -d --build"
 }
 
 # ---------- 5. 验证 ----------
 Run-Step "检查容器状态" {
-    ssh $sshTarget "cd $RemotePath && docker compose ps"
+    ssh $sshTarget "cd $RemotePath; docker compose ps"
 }
 
 Write-Host ""
 Write-Host "=== 部署完成 ===" -ForegroundColor Green
-Write-Host "后端日志查看： ssh $sshTarget 'cd $RemotePath && docker compose logs -f server'"
+Write-Host "后端日志查看： ssh $sshTarget 'cd $RemotePath; docker compose logs -f server'"
 Write-Host "健康检查：     ssh $sshTarget 'curl http://127.0.0.1:8082/board/api/health'"
 Write-Host ""
 Write-Host "⚠️  如未配置主 Nginx 的 /board/ 反代，请先配置后再通过浏览器访问："
