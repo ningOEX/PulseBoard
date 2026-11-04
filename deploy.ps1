@@ -1,4 +1,4 @@
-# PulseBoard 一键部署脚本（Windows PowerShell）
+# PulseBoard 一键部署脚本（Windows PowerShell 5 兼容）
 # 本地编译 -> 创建服务器目录 -> 上传产物 -> 远程启动 Docker
 #
 # 用法：
@@ -18,11 +18,16 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $sshTarget = "$ServerUser@$ServerHost"
 
+# 远程执行命令：通过管道把命令传给远程 bash，彻底避免 PowerShell 解析 ssh 参数
+function Invoke-Remote($command) {
+    $command | & ssh $sshTarget bash
+    if ($LASTEXITCODE -ne 0) { throw "远程命令执行失败: $command" }
+}
+
 function Run-Step($name, $scriptBlock) {
     Write-Host ""
     Write-Host "=== $name ===" -ForegroundColor Cyan
     & $scriptBlock
-    if ($LASTEXITCODE -ne 0) { throw "$name 失败" }
 }
 
 # ---------- 1. 本地编译 ----------
@@ -40,8 +45,7 @@ Run-Step "编译前端" {
 
 # ---------- 2. 创建远程目录 ----------
 Run-Step "创建远程目录 $RemotePath" {
-    $cmd = "mkdir -p $RemotePath/server $RemotePath/web"
-    ssh $sshTarget $cmd
+    Invoke-Remote "mkdir -p $RemotePath/server $RemotePath/web"
 }
 
 # ---------- 3. 上传文件 ----------
@@ -66,20 +70,21 @@ Run-Step "上传 docker-compose.yml" {
 
 # ---------- 4. 远程启动 ----------
 Run-Step "远程构建并启动容器" {
-    $cmd = 'cd ' + $RemotePath + '; docker compose up -d --build'
-    ssh $sshTarget $cmd
+    Invoke-Remote ('cd ' + $RemotePath + ' && docker compose up -d --build')
 }
 
 # ---------- 5. 验证 ----------
 Run-Step "检查容器状态" {
-    $cmd = 'cd ' + $RemotePath + '; docker compose ps'
-    ssh $sshTarget $cmd
+    Invoke-Remote ('cd ' + $RemotePath + ' && docker compose ps')
 }
 
 Write-Host ""
 Write-Host "=== 部署完成 ===" -ForegroundColor Green
-Write-Host "后端日志查看： ssh $sshTarget 'cd $RemotePath; docker compose logs -f server'"
-Write-Host "健康检查：     ssh $sshTarget 'curl http://127.0.0.1:8082/board/api/health'"
+Write-Host "后端日志查看： ssh $sshTarget"
+Write-Host "              然后执行: cd $RemotePath && docker compose logs -f server"
 Write-Host ""
-Write-Host "⚠️  如未配置主 Nginx 的 /board/ 反代，请先配置后再通过浏览器访问："
+Write-Host "健康检查：     ssh $sshTarget"
+Write-Host "              然后执行: curl http://127.0.0.1:8082/board/api/health"
+Write-Host ""
+Write-Host "如未配置主 Nginx 的 /board/ 反代，请先配置后再通过浏览器访问："
 Write-Host "    http://$ServerHost/board/"
