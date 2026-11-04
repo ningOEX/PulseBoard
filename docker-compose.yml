@@ -1,4 +1,13 @@
 services:
+  mongo:
+    image: mongo:6
+    container_name: pulseboard-mongo
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - pulseboard-net
+
   server:
     build:
       context: ./server
@@ -6,10 +15,10 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: production
-      # 连接服务器上已有的 MongoDB
-      # - 若 MongoDB 为宿主机直接安装：使用 172.17.0.1（docker0 网桥地址）或宿主机内网 IP
-      # - 若 MongoDB 也运行在 Docker 中：请将其加入下方 pulseboard-net 网络，或使用宿主机映射端口
-      MONGODB_URI: mongodb://172.17.0.1:27017/panel_chat
+      # 连接同网络内的 mongo 容器，容器名即主机名
+      MONGODB_URI: mongodb://mongo:27017/panel_chat
+    depends_on:
+      - mongo
     networks:
       - pulseboard-net
 
@@ -18,13 +27,16 @@ services:
       context: ./web
     container_name: pulseboard-web
     restart: unless-stopped
-    # 宿主机端口:容器端口，80/8081 已被占用，使用 8082 供外层 Nginx 反代
+    # 仅本机监听，供外层 Nginx 反代
     ports:
       - "127.0.0.1:8082:80"
     depends_on:
       - server
     networks:
       - pulseboard-net
+
+volumes:
+  mongo-data:
 
 networks:
   pulseboard-net:
